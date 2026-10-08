@@ -1,0 +1,63 @@
+name: meta-ads
+
+on:
+  schedule:
+    - cron: "50 23 * * *"   # 매일 08:50 KST — 일일 점검 & 소재 교체 알림
+    - cron: "40 0 1 * *"    # 매월 1일 09:40 KST — 전월 결과 보고서
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "daily | monthly"
+        default: daily
+      month:
+        description: "monthly 대상 월 (YYYY-MM, 비우면 지난달)"
+        required: false
+      mock:
+        description: "모의 데이터로 실행"
+        type: boolean
+        default: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: 작업 결정
+        id: task
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "task=${{ inputs.task }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "40 0 1 * *" ]; then
+            echo "task=monthly" >> "$GITHUB_OUTPUT"
+          else
+            echo "task=daily" >> "$GITHUB_OUTPUT"
+          fi
+          if [ "${{ inputs.mock }}" = "true" ]; then echo "mock=--mock" >> "$GITHUB_OUTPUT"; fi
+
+      - name: 일일 점검
+        if: steps.task.outputs.task == 'daily'
+        run: python -m meta_ads daily --all ${{ steps.task.outputs.mock }}
+
+      - name: 월간 보고서
+        if: steps.task.outputs.task == 'monthly'
+        run: |
+          MONTH_ARG=""
+          if [ -n "${{ inputs.month }}" ]; then MONTH_ARG="--month ${{ inputs.month }}"; fi
+          python -m meta_ads monthly --all $MONTH_ARG ${{ steps.task.outputs.mock }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ steps.task.outputs.task }}-${{ github.run_id }}
+          path: reports/
+          retention-days: 90

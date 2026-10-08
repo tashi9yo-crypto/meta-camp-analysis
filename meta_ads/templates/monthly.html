@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ rep.client }} {{ rep.period[0].year }}년 {{ rep.period[0].month }}월 광고 보고서</title>
+<style>
+:root {
+  color-scheme: light;
+  --surface-0: #f4f3f0; --surface-1: #fcfcfb; --border: #e3e2dd;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
+  --series-1: #2a78d6; --series-muted: #b9b8b2; --grid: #ebeae6;
+  --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b; --info: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-0: #111110; --surface-1: #1a1a19; --border: #33332f;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+    --series-1: #3987e5; --series-muted: #55544f; --grid: #2a2a27; --info: #3987e5;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #111110; --surface-1: #1a1a19; --border: #33332f;
+  --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+  --series-1: #3987e5; --series-muted: #55544f; --grid: #2a2a27; --info: #3987e5;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface-0); color: var(--text-primary);
+  font: 15px/1.6 "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif; }
+main { max-width: 1040px; overflow-wrap: anywhere; margin: 0 auto; padding: 32px 16px 64px; }
+header h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header p { margin: 0; color: var(--text-secondary); }
+h2 { font-size: 19px; margin: 40px 0 12px; letter-spacing: -0.01em; }
+h3 { font-size: 15px; margin: 0 0 8px; color: var(--text-secondary); font-weight: 600; }
+.card { min-width: 0; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.banner { margin: 16px 0 0; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--warning);
+  background: color-mix(in srgb, var(--warning) 12%, transparent); font-size: 14px; }
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+.tile .label { color: var(--text-secondary); font-size: 13px; }
+.tile .value { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.tile .sub { font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.chg-good { color: var(--good); font-weight: 600; } .chg-bad { color: var(--critical); font-weight: 600; }
+.badge { display: inline-flex; gap: 4px; align-items: center; font-size: 12px; font-weight: 600;
+  padding: 1px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-primary); white-space: nowrap; }
+.badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot, var(--info)); }
+.b-good { --dot: var(--good); } .b-warning { --dot: var(--warning); } .b-serious { --dot: var(--serious); }
+.b-critical { --dot: var(--critical); } .b-info { --dot: var(--info); }
+.charts { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.chart { width: 100%; height: auto; display: block; }
+.chart .grid { stroke: var(--grid); stroke-width: 1; }
+.chart .axis { stroke: var(--text-muted); stroke-width: 1; }
+.chart .tick { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart .tick.strong { fill: var(--text-secondary); font-weight: 600; }
+.chart .bar { fill: var(--series-1); }
+.chart .line { fill: none; stroke: var(--series-1); stroke-width: 2; stroke-linejoin: round; }
+.chart .dot { fill: var(--series-1); stroke: var(--surface-1); stroke-width: 2; }
+.chart .target { stroke: var(--text-secondary); stroke-width: 1; stroke-dasharray: 4 4; }
+.chart .hit { fill: transparent; }
+.chart .hit:hover { fill: color-mix(in srgb, var(--text-primary) 6%, transparent); }
+ul.insights { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+ul.insights li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: start; }
+.tbl { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th { text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 12.5px; border-bottom: 1px solid var(--border); padding: 8px 8px; white-space: nowrap; }
+td { border-bottom: 1px solid var(--grid); padding: 8px 8px; vertical-align: middle; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+.meter { display: inline-block; width: 80px; height: 8px; border-radius: 4px; background: var(--grid); vertical-align: middle; margin-right: 6px; overflow: hidden; }
+.meter > span { display: block; height: 100%; background: var(--series-1); border-radius: 0 4px 4px 0; }
+.meter.muted > span { background: var(--series-muted); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.plan td:first-child { white-space: nowrap; }
+.targets { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.muted { color: var(--text-muted); }
+footer { margin-top: 48px; color: var(--text-muted); font-size: 12.5px; }
+@media (max-width: 760px) {
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .two { grid-template-columns: 1fr; }
+  .targets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  ul.insights li { grid-template-columns: 1fr; gap: 2px; }
+}
+@media print { body { background: #fff; } .card { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>{{ rep.client }} · {{ rep.period[0].year }}년 {{ rep.period[0].month }}월 메타 광고 결과 보고서</h1>
+  <p>{{ rep.period[0] }} ~ {{ rep.period[1] }} · 광고 계정 act_{{ rep.account_id }} · 전월({{ rep.prev_period[0].month }}월) 대비</p>
+  {% if rep.is_mock %}<div class="banner">⚠️ 모의(테스트) 데이터로 생성된 보고서입니다. 실제 광고 성과가 아닙니다.</div>{% endif %}
+</header>
+
+<section class="tiles">
+{% for t in tiles %}
+  <div class="card tile">
+    <div class="label">{{ t.label }}</div>
+    <div class="value">{{ t.value }}</div>
+    <div class="sub">전월 {{ t.prev }}{% if t.delta %} · <span class="{{ 'chg-good' if t.good else 'chg-bad' }}">{{ t.delta }}</span>{% endif %}</div>
+    {% if t.target %}<div class="sub" style="margin-top:4px"><span class="badge {{ 'b-good' if t.on_target else 'b-critical' }}">{{ '목표 달성' if t.on_target else '목표 미달' }}</span> 목표 {{ t.target }}</div>{% endif %}
+  </div>
+{% endfor %}
+</section>
+
+<h2>일별 추이</h2>
+<div class="charts">
+  <div class="card"><h3>일별 광고비</h3>{{ charts.spend }}</div>
+  <div class="card"><h3>일별 ROAS</h3>{{ charts.roas }}</div>
+  <div class="card"><h3>일별 링크 CTR</h3>{{ charts.ctr }}</div>
+</div>
+
+<h2>핵심 분석</h2>
+<div class="card">
+<ul class="insights">
+{% set tone_label = {'good': '양호', 'warning': '주의', 'critical': '위험', 'info': '참고'} %}
+{% for i in rep.insights %}
+  <li><span><span class="badge b-{{ i.tone }}">{{ i.area }} · {{ tone_label[i.tone] }}</span></span><span>{{ i.text }}</span></li>
+{% endfor %}
+</ul>
+</div>
+
+<h2>캠페인 성과와 다음 달 예산</h2>
+<div class="card tbl">
+<table>
+  <thead><tr><th>캠페인</th><th class="n">광고비</th><th class="n">비중</th><th class="n">전환</th><th class="n">CPA</th><th class="n">ROAS</th><th class="n">전월 ROAS</th><th class="n">CTR</th><th class="n">다음 달 제안</th><th class="n">증감</th></tr></thead>
+  <tbody>
+  {% for c in rep.campaigns.itertuples() %}
+  {% set p = rep.budget_plan.iloc[loop.index0] %}
+  <tr>
+    <td>{{ c.campaign_name }}{% if p.awareness %} <span class="muted">(인지)</span>{% endif %}</td>
+    <td class="n">{{ c.spend|won }}</td><td class="n">{{ c.spend_share|pct(0) }}</td>
+    <td class="n">{{ c.conversions|num }}</td><td class="n">{{ c.cpa|won }}</td><td class="n">{{ c.roas|roas }}</td>
+    <td class="n muted">{{ c.roas_prev|roas }}</td><td class="n">{{ c.ctr|pct }}</td>
+    <td class="n">{{ p.next_budget|won }}</td>
+    <td class="n {{ 'chg-good' if p.change > 0.05 else ('chg-bad' if p.change < -0.05 else '') }}">{{ '%+.0f%%'|format(p.change * 100) }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="muted" style="margin:8px 0 0;font-size:12.5px">다음 달 예산은 캠페인 효율(ROAS, 없으면 CPA) 지수에 비례해 ±30% 범위로 조정하고, 인지/트래픽 캠페인은 유지했습니다.</p>
+</div>
+
+<h2>소재 성과</h2>
+<div class="two">
+  <div class="card tbl"><h3>효율 상위 5</h3>
+  <table><thead><tr><th>소재</th><th>형식</th><th class="n">광고비</th><th class="n">ROAS</th><th class="n">CPA</th><th class="n">CTR</th></tr></thead><tbody>
+  {% for a in top_ads.itertuples() %}<tr><td>{{ a.ad_name }}</td><td>{{ a.format }}</td><td class="n">{{ a.spend|won }}</td><td class="n">{{ a.roas|roas }}</td><td class="n">{{ a.cpa|won }}</td><td class="n">{{ a.ctr|pct }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <div class="card tbl"><h3>효율 하위 5</h3>
+  <table><thead><tr><th>소재</th><th>형식</th><th class="n">광고비</th><th class="n">ROAS</th><th class="n">CPA</th><th class="n">CTR</th></tr></thead><tbody>
+  {% for a in bottom_ads.itertuples() %}<tr><td>{{ a.ad_name }}</td><td>{{ a.format }}</td><td class="n">{{ a.spend|won }}</td><td class="n">{{ a.roas|roas }}</td><td class="n">{{ a.cpa|won }}</td><td class="n">{{ a.ctr|pct }}</td></tr>{% endfor %}
+  </tbody></table></div>
+</div>
+<div class="card tbl" style="margin-top:12px"><h3>전체 소재 · 월 전반 → 후반 CTR 변화</h3>
+<table><thead><tr><th>소재</th><th>광고세트</th><th>상태</th><th class="n">광고비</th><th class="n">CTR 전반</th><th class="n">CTR 후반</th><th class="n">변화</th><th class="n">월 빈도</th><th>판정</th></tr></thead><tbody>
+{% for a in rep.ads.itertuples() %}
+<tr><td>{{ a.ad_name }}</td><td class="muted">{{ a.adset_name }}</td><td>{{ '집행' if a.status == 'ACTIVE' else '중지' }}</td>
+<td class="n">{{ a.spend|won }}</td><td class="n">{{ a.ctr_h1|pct }}</td><td class="n">{{ a.ctr_h2|pct }}</td>
+<td class="n">{{ '-' if isnan(a.ctr_trend) else '%+.0f%%'|format(a.ctr_trend * 100) }}</td><td class="n">{{ a.frequency_month|num(1) }}</td>
+<td>{% if a.fatigued %}<span class="badge b-critical">교체 필요</span>{% elif not isnan(a.ctr_trend) and a.ctr_trend <= -0.15 %}<span class="badge b-warning">관찰</span>{% else %}<span class="badge b-good">정상</span>{% endif %}</td></tr>
+{% endfor %}
+</tbody></table></div>
+
+<div class="card tbl" style="margin-top:12px"><h3>형식별 성과</h3>
+<table><thead><tr><th>형식</th><th class="n">광고비 비중</th><th class="n">전환 비중</th><th class="n">CTR</th><th class="n">CPA</th><th class="n">ROAS</th></tr></thead><tbody>
+{% set mx = max_share(rep.formats) %}
+{% for f in rep.formats.itertuples() %}<tr><td>{{ f.format }}</td>
+<td class="n"><span class="meter muted"><span style="width:{{ (f.spend_share / mx * 100)|round(1) }}%"></span></span>{{ f.spend_share|pct(0) }}</td>
+<td class="n"><span class="meter"><span style="width:{{ (f.conv_share / mx * 100)|round(1) }}%"></span></span>{{ f.conv_share|pct(0) }}</td>
+<td class="n">{{ f.ctr|pct }}</td><td class="n">{{ f.cpa|won }}</td><td class="n">{{ f.roas|roas }}</td></tr>{% endfor %}
+</tbody></table></div>
+
+<h2>타겟 · 지면</h2>
+<div class="two">
+<div class="card tbl"><h3>연령 · 성별</h3>
+<table><thead><tr><th>구분</th><th class="n">광고비 비중</th><th class="n">전환 비중</th><th class="n">ROAS</th></tr></thead><tbody>
+{% set mx = max_share(demo) %}
+{% for s in demo.itertuples() %}<tr><td>{{ s.label }}</td>
+<td class="n"><span class="meter muted"><span style="width:{{ (s.spend_share / mx * 100)|round(1) }}%"></span></span>{{ s.spend_share|pct(0) }}</td>
+<td class="n"><span class="meter"><span style="width:{{ (s.conv_share / mx * 100)|round(1) }}%"></span></span>{{ s.conv_share|pct(0) }}</td>
+<td class="n">{{ s.roas|roas }}</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="card tbl"><h3>노출 지면</h3>
+<table><thead><tr><th>지면</th><th class="n">광고비 비중</th><th class="n">전환 비중</th><th class="n">CTR</th><th class="n">ROAS</th></tr></thead><tbody>
+{% set mx = max_share(placement) %}
+{% for s in placement.itertuples() %}<tr><td>{{ s.label }}</td>
+<td class="n"><span class="meter muted"><span style="width:{{ (s.spend_share / mx * 100)|round(1) }}%"></span></span>{{ s.spend_share|pct(0) }}</td>
+<td class="n"><span class="meter"><span style="width:{{ (s.conv_share / mx * 100)|round(1) }}%"></span></span>{{ s.conv_share|pct(0) }}</td>
+<td class="n">{{ s.ctr|pct }}</td><td class="n">{{ s.roas|roas }}</td></tr>{% endfor %}
+</tbody></table>
+<p class="muted" style="margin:8px 0 0;font-size:12.5px">회색 막대 = 광고비 비중, 파란 막대 = 전환 비중. 파란 막대가 더 길면 지출 대비 효율이 높은 구간입니다.</p>
+</div>
+</div>
+
+<h2>다음 달 방향</h2>
+<div class="targets">
+  <div class="card tile"><div class="label">예산</div><div class="value">{{ rep.next_targets.budget|won }}</div></div>
+  <div class="card tile"><div class="label">목표 CPA</div><div class="value">{{ rep.next_targets.cpa|won }}</div></div>
+  <div class="card tile"><div class="label">목표 ROAS</div><div class="value">{{ rep.next_targets.roas|roas }}</div></div>
+  <div class="card tile"><div class="label">목표 전환</div><div class="value">{{ rep.next_targets.conversions|num }}건</div></div>
+  <div class="card tile"><div class="label">목표 CTR</div><div class="value">{{ rep.next_targets.ctr|pct }}</div></div>
+</div>
+<div class="card tbl plan" style="margin-top:12px">
+<table><thead><tr><th>우선순위</th><th>영역</th><th>실행 항목</th><th>근거</th></tr></thead><tbody>
+{% set pr = {'높음': 'b-critical', '중간': 'b-warning', '낮음': 'b-info'} %}
+{% for s in rep.next_steps %}<tr><td><span class="badge {{ pr[s.priority] }}">{{ s.priority }}</span></td><td>{{ s.area }}</td><td>{{ s.action }}</td><td class="muted">{{ s.why }}</td></tr>{% endfor %}
+</tbody></table></div>
+
+<footer>생성 {{ generated }} · 전환 기준: 7일 클릭/1일 조회 기여 · 데이터 출처: Meta Marketing API</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>봄날 2026년 9월 광고 보고서</title>
+<style>
+:root {
+  color-scheme: light;
+  --surface-0: #f4f3f0; --surface-1: #fcfcfb; --border: #e3e2dd;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
+  --series-1: #2a78d6; --series-muted: #b9b8b2; --grid: #ebeae6;
+  --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b; --info: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-0: #111110; --surface-1: #1a1a19; --border: #33332f;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+    --series-1: #3987e5; --series-muted: #55544f; --grid: #2a2a27; --info: #3987e5;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #111110; --surface-1: #1a1a19; --border: #33332f;
+  --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+  --series-1: #3987e5; --series-muted: #55544f; --grid: #2a2a27; --info: #3987e5;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface-0); color: var(--text-primary);
+  font: 15px/1.6 "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif; }
+main { max-width: 1040px; overflow-wrap: anywhere; margin: 0 auto; padding: 32px 16px 64px; }
+header h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header p { margin: 0; color: var(--text-secondary); }
+h2 { font-size: 19px; margin: 40px 0 12px; letter-spacing: -0.01em; }
+h3 { font-size: 15px; margin: 0 0 8px; color: var(--text-secondary); font-weight: 600; }
+.card { min-width: 0; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.banner { margin: 16px 0 0; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--warning);
+  background: color-mix(in srgb, var(--warning) 12%, transparent); font-size: 14px; }
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+.tile .label { color: var(--text-secondary); font-size: 13px; }
+.tile .value { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.tile .sub { font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.chg-good { color: var(--good); font-weight: 600; } .chg-bad { color: var(--critical); font-weight: 600; }
+.badge { display: inline-flex; gap: 4px; align-items: center; font-size: 12px; font-weight: 600;
+  padding: 1px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-primary); white-space: nowrap; }
+.badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot, var(--info)); }
+.b-good { --dot: var(--good); } .b-warning { --dot: var(--warning); } .b-serious { --dot: var(--serious); }
+.b-critical { --dot: var(--critical); } .b-info { --dot: var(--info); }
+.charts { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.chart { width: 100%; height: auto; display: block; }
+.chart .grid { stroke: var(--grid); stroke-width: 1; }
+.chart .axis { stroke: var(--text-muted); stroke-width: 1; }
+.chart .tick { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart .tick.strong { fill: var(--text-secondary); font-weight: 600; }
+.chart .bar { fill: var(--series-1); }
+.chart .line { fill: none; stroke: var(--series-1); stroke-width: 2; stroke-linejoin: round; }
+.chart .dot { fill: var(--series-1); stroke: var(--surface-1); stroke-width: 2; }
+.chart .target { stroke: var(--text-secondary); stroke-width: 1; stroke-dasharray: 4 4; }
+.chart .hit { fill: transparent; }
+.chart .hit:hover { fill: color-mix(in srgb, var(--text-primary) 6%, transparent); }
+ul.insights { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+ul.insights li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: start; }
+.tbl { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th { text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 12.5px; border-bottom: 1px solid var(--border); padding: 8px 8px; white-space: nowrap; }
+td { border-bottom: 1px solid var(--grid); padding: 8px 8px; vertical-align: middle; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+.meter { display: inline-block; width: 80px; height: 8px; border-radius: 4px; background: var(--grid); vertical-align: middle; margin-right: 6px; overflow: hidden; }
+.meter > span { display: block; height: 100%; background: var(--series-1); border-radius: 0 4px 4px 0; }
+.meter.muted > span { background: var(--series-muted); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.plan td:first-child { white-space: nowrap; }
+.targets { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.muted { color: var(--text-muted); }
+footer { margin-top: 48px; color: var(--text-muted); font-size: 12.5px; }
+@media (max-width: 760px) {
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .two { grid-template-columns: 1fr; }
+  .targets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  ul.insights li { grid-template-columns: 1fr; gap: 2px; }
+}
+@media print { body { background: #fff; } .card { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>봄날 · 2026년 9월 메타 광고 결과 보고서</h1>
+  <p>2026-09-01 ~ 2026-09-30 · 광고 계정 act_1828231244405674 · 전월(8월) 대비</p>
+  <div class="banner">⚠️ 모의(테스트) 데이터로 생성된 보고서입니다. 실제 광고 성과가 아닙니다.</div>
+</header>
+
+<section class="tiles">
+
+  <div class="card tile">
+    <div class="label">광고비</div>
+    <div class="value">5,909,174원</div>
+    <div class="sub">전월 4,806,121원 · <span class="chg-good">+23%</span></div>
+    
+  </div>
+
+  <div class="card tile">
+    <div class="label">매출</div>
+    <div class="value">18,904,870원</div>
+    <div class="sub">전월 12,020,498원 · <span class="chg-good">+57%</span></div>
+    
+  </div>
+
+  <div class="card tile">
+    <div class="label">ROAS</div>
+    <div class="value">320%</div>
+    <div class="sub">전월 250% · <span class="chg-good">+28%</span></div>
+    <div class="sub" style="margin-top:4px"><span class="badge b-good">목표 달성</span> 목표 300%</div>
+  </div>
+
+  <div class="card tile">
+    <div class="label">전환</div>
+    <div class="value">343</div>
+    <div class="sub">전월 232 · <span class="chg-good">+48%</span></div>
+    
+  </div>
+
+  <div class="card tile">
+    <div class="label">CPA</div>
+    <div class="value">17,228원</div>
+    <div class="sub">전월 20,716원 · <span class="chg-good">-17%</span></div>
+    <div class="sub" style="margin-top:4px"><span class="badge b-good">목표 달성</span> 목표 18,000원</div>
+  </div>
+
+  <div class="card tile">
+    <div class="label">링크 CTR</div>
+    <div class="value">1.35%</div>
+    <div class="sub">전월 1.29% · <span class="chg-good">+4%</span></div>
+    <div class="sub" style="margin-top:4px"><span class="badge b-good">목표 달성</span> 목표 0.80%</div>
+  </div>
+
+  <div class="card tile">
+    <div class="label">CPC</div>
+    <div class="value">647원</div>
+    <div class="sub">전월 641원 · <span class="chg-bad">+1%</span></div>
+    
+  </div>
+
+  <div class="card tile">
+    <div class="label">CPM</div>
+    <div class="value">8,753원</div>
+    <div class="sub">전월 8,301원 · <span class="chg-bad">+5%</span></div>
+    
+  </div>
+
+</section>
+
+<h2>일별 추이</h2>
+<div class="charts">
+  <div class="card"><h3>일별 광고비</h3><svg viewBox="0 0 720 220" class="chart" role="img"><line x1="64" x2="712" y1="192.0" y2="192.0" class="grid"/><text x="56" y="196.0" class="tick" text-anchor="end">0</text><line x1="64" x2="712" y1="147.0" y2="147.0" class="grid"/><text x="56" y="151.0" class="tick" text-anchor="end">6만</text><line x1="64" x2="712" y1="102.0" y2="102.0" class="grid"/><text x="56" y="106.0" class="tick" text-anchor="end">12만</text><line x1="64" x2="712" y1="57.0" y2="57.0" class="grid"/><text x="56" y="61.0" class="tick" text-anchor="end">19만</text><line x1="64" x2="712" y1="12.0" y2="12.0" class="grid"/><text x="56" y="16.0" class="tick" text-anchor="end">25만</text><path d="M65.8,192.0 V71.4 Q65.8,67.4 69.8,67.4 H79.8 Q83.8,67.4 83.8,71.4 V192.0 Z" class="bar"/><rect x="64.0" y="12" width="21.6" height="180" class="hit"><title>09/01: 173,017원</title></rect><text x="74.8" y="212" class="tick" text-anchor="middle">09/01</text><path d="M87.4,192.0 V69.2 Q87.4,65.2 91.4,65.2 H101.4 Q105.4,65.2 105.4,69.2 V192.0 Z" class="bar"/><rect x="85.6" y="12" width="21.6" height="180" class="hit"><title>09/02: 176,135원</title></rect><path d="M109.0,192.0 V72.9 Q109.0,68.9 113.0,68.9 H123.0 Q127.0,68.9 127.0,72.9 V192.0 Z" class="bar"/><rect x="107.2" y="12" width="21.6" height="180" class="hit"><title>09/03: 170,952원</title></rect><path d="M130.6,192.0 V70.3 Q130.6,66.3 134.6,66.3 H144.6 Q148.6,66.3 148.6,70.3 V192.0 Z" class="bar"/><rect x="128.8" y="12" width="21.6" height="180" class="hit"><title>09/04: 174,553원</title></rect><text x="139.6" y="212" class="tick" text-anchor="middle">09/04</text><path d="M152.2,192.0 V63.0 Q152.2,59.0 156.2,59.0 H166.2 Q170.2,59.0 170.2,63.0 V192.0 Z" class="bar"/><rect x="150.4" y="12" width="21.6" height="180" class="hit"><title>09/05: 184,698원</title></rect><path d="M173.8,192.0 V59.0 Q173.8,55.0 177.8,55.0 H187.8 Q191.8,55.0 191.8,59.0 V192.0 Z" class="bar"/><rect x="172.0" y="12" width="21.6" height="180" class="hit"><title>09/06: 190,245원</title></rect><path d="M195.4,192.0 V65.1 Q195.4,61.1 199.4,61.1 H209.4 Q213.4,61.1 213.4,65.1 V192.0 Z" class="bar"/><rect x="193.6" y="12" width="21.6" height="180" class="hit"><title>09/07: 181,869원</title></rect><text x="204.4" y="212" class="tick" text-anchor="middle">09/07</text><path d="M217.0,192.0 V65.2 Q217.0,61.2 221.0,61.2 H231.0 Q235.0,61.2 235.0,65.2 V192.0 Z" class="bar"/><rect x="215.2" y="12" width="21.6" height="180" class="hit"><title>09/08: 181,642원</title></rect><path d="M238.6,192.0 V66.9 Q238.6,62.9 242.6,62.9 H252.6 Q256.6,62.9 256.6,66.9 V192.0 Z" class="bar"/><rect x="236.8" y="12" width="21.6" height="180" class="hit"><title>09/09: 179,328원</title></rect><path d="M260.2,192.0 V41.1 Q260.2,37.1 264.2,37.1 H274.2 Q278.2,37.1 278.2,41.1 V192.0 Z" class="bar"/><rect x="258.4" y="12" width="21.6" height="180" class="hit"><title>09/10: 215,117원</title></rect><text x="269.2" y="212" class="tick" text-anchor="middle">09/10</text><path d="M281.8,192.0 V43.1 Q281.8,39.1 285.8,39.1 H295.8 Q299.8,39.1 299.8,43.1 V192.0 Z" class="bar"/><rect x="280.0" y="12" width="21.6" height="180" class="hit"><title>09/11: 212,398원</title></rect><path d="M303.4,192.0 V32.1 Q303.4,28.1 307.4,28.1 H317.4 Q321.4,28.1 321.4,32.1 V192.0 Z" class="bar"/><rect x="301.6" y="12" width="21.6" height="180" class="hit"><title>09/12: 227,625원</title></rect><path d="M325.0,192.0 V31.5 Q325.0,27.5 329.0,27.5 H339.0 Q343.0,27.5 343.0,31.5 V192.0 Z" class="bar"/><rect x="323.2" y="12" width="21.6" height="180" class="hit"><title>09/13: 228,516원</title></rect><text x="334.0" y="212" class="tick" text-anchor="middle">09/13</text><path d="M346.6,192.0 V43.1 Q346.6,39.1 350.6,39.1 H360.6 Q364.6,39.1 364.6,43.1 V192.0 Z" class="bar"/><rect x="344.8" y="12" width="21.6" height="180" class="hit"><title>09/14: 212,414원</title></rect><path d="M368.2,192.0 V56.2 Q368.2,52.2 372.2,52.2 H382.2 Q386.2,52.2 386.2,56.2 V192.0 Z" class="bar"/><rect x="366.4" y="12" width="21.6" height="180" class="hit"><title>09/15: 194,222원</title></rect><path d="M389.8,192.0 V55.4 Q389.8,51.4 393.8,51.4 H403.8 Q407.8,51.4 407.8,55.4 V192.0 Z" class="bar"/><rect x="388.0" y="12" width="21.6" height="180" class="hit"><title>09/16: 195,296원</title></rect><text x="398.8" y="212" class="tick" text-anchor="middle">09/16</text><path d="M411.4,192.0 V51.1 Q411.4,47.1 415.4,47.1 H425.4 Q429.4,47.1 429.4,51.1 V192.0 Z" class="bar"/><rect x="409.6" y="12" width="21.6" height="180" class="hit"><title>09/17: 201,190원</title></rect><path d="M433.0,192.0 V57.9 Q433.0,53.9 437.0,53.9 H447.0 Q451.0,53.9 451.0,57.9 V192.0 Z" class="bar"/><rect x="431.2" y="12" width="21.6" height="180" class="hit"><title>09/18: 191,805원</title></rect><path d="M454.6,192.0 V49.3 Q454.6,45.3 458.6,45.3 H468.6 Q472.6,45.3 472.6,49.3 V192.0 Z" class="bar"/><rect x="452.8" y="12" width="21.6" height="180" class="hit"><title>09/19: 203,811원</title></rect><text x="463.6" y="212" class="tick" text-anchor="middle">09/19</text><path d="M476.2,192.0 V42.6 Q476.2,38.6 480.2,38.6 H490.2 Q494.2,38.6 494.2,42.6 V192.0 Z" class="bar"/><rect x="474.4" y="12" width="21.6" height="180" class="hit"><title>09/20: 213,020원</title></rect><path d="M497.8,192.0 V56.9 Q497.8,52.9 501.8,52.9 H511.8 Q515.8,52.9 515.8,56.9 V192.0 Z" class="bar"/><rect x="496.0" y="12" width="21.6" height="180" class="hit"><title>09/21: 193,235원</title></rect><path d="M519.4,192.0 V56.0 Q519.4,52.0 523.4,52.0 H533.4 Q537.4,52.0 537.4,56.0 V192.0 Z" class="bar"/><rect x="517.6" y="12" width="21.6" height="180" class="hit"><title>09/22: 194,470원</title></rect><text x="528.4" y="212" class="tick" text-anchor="middle">09/22</text><path d="M541.0,192.0 V53.8 Q541.0,49.8 545.0,49.8 H555.0 Q559.0,49.8 559.0,53.8 V192.0 Z" class="bar"/><rect x="539.2" y="12" width="21.6" height="180" class="hit"><title>09/23: 197,503원</title></rect><path d="M562.6,192.0 V45.6 Q562.6,41.6 566.6,41.6 H576.6 Q580.6,41.6 580.6,45.6 V192.0 Z" class="bar"/><rect x="560.8" y="12" width="21.6" height="180" class="hit"><title>09/24: 208,922원</title></rect><path d="M584.2,192.0 V56.3 Q584.2,52.3 588.2,52.3 H598.2 Q602.2,52.3 602.2,56.3 V192.0 Z" class="bar"/><rect x="582.4" y="12" width="21.6" height="180" class="hit"><title>09/25: 194,036원</title></rect><text x="593.2" y="212" class="tick" text-anchor="middle">09/25</text><path d="M605.8,192.0 V45.3 Q605.8,41.3 609.8,41.3 H619.8 Q623.8,41.3 623.8,45.3 V192.0 Z" class="bar"/><rect x="604.0" y="12" width="21.6" height="180" class="hit"><title>09/26: 209,253원</title></rect><path d="M627.4,192.0 V44.9 Q627.4,40.9 631.4,40.9 H641.4 Q645.4,40.9 645.4,44.9 V192.0 Z" class="bar"/><rect x="625.6" y="12" width="21.6" height="180" class="hit"><title>09/27: 209,922원</title></rect><path d="M649.0,192.0 V51.0 Q649.0,47.0 653.0,47.0 H663.0 Q667.0,47.0 667.0,51.0 V192.0 Z" class="bar"/><rect x="647.2" y="12" width="21.6" height="180" class="hit"><title>09/28: 201,406원</title></rect><text x="658.0" y="212" class="tick" text-anchor="middle">09/28</text><path d="M670.6,192.0 V58.3 Q670.6,54.3 674.6,54.3 H684.6 Q688.6,54.3 688.6,58.3 V192.0 Z" class="bar"/><rect x="668.8" y="12" width="21.6" height="180" class="hit"><title>09/29: 191,293원</title></rect><path d="M692.2,192.0 V51.1 Q692.2,47.1 696.2,47.1 H706.2 Q710.2,47.1 710.2,51.1 V192.0 Z" class="bar"/><rect x="690.4" y="12" width="21.6" height="180" class="hit"><title>09/30: 201,281원</title></rect><text x="701.2" y="212" class="tick" text-anchor="middle">09/30</text><line x1="64" x2="712" y1="192" y2="192" class="axis"/></svg></div>
+  <div class="card"><h3>일별 ROAS</h3><svg viewBox="0 0 720 200" class="chart" role="img"><line x1="64" x2="712" y1="172.0" y2="172.0" class="grid"/><text x="56" y="176.0" class="tick" text-anchor="end">0%</text><line x1="64" x2="712" y1="132.0" y2="132.0" class="grid"/><text x="56" y="136.0" class="tick" text-anchor="end">125%</text><line x1="64" x2="712" y1="92.0" y2="92.0" class="grid"/><text x="56" y="96.0" class="tick" text-anchor="end">250%</text><line x1="64" x2="712" y1="52.0" y2="52.0" class="grid"/><text x="56" y="56.0" class="tick" text-anchor="end">375%</text><line x1="64" x2="712" y1="12.0" y2="12.0" class="grid"/><text x="56" y="16.0" class="tick" text-anchor="end">500%</text><line x1="64" x2="712" y1="76.0" y2="76.0" class="target"/><text x="708" y="70.0" class="tick strong" text-anchor="end">목표 300%</text><polyline class="line" points="64.0,95.0 86.3,83.0 108.7,55.8 131.0,110.2 153.4,72.4 175.7,44.9 198.1,114.9 220.4,126.2 242.8,104.6 265.1,45.7 287.4,74.0 309.8,41.9 332.1,95.9 354.5,34.5 376.8,17.9 399.2,18.0 421.5,22.1 443.9,41.7 466.2,77.5 488.6,90.2 510.9,104.6 533.2,100.9 555.6,42.4 577.9,70.7 600.3,74.2 622.6,83.8 645.0,116.8 667.3,28.1 689.7,37.2 712.0,80.0"/><circle cx="712.0" cy="80.0" r="4" class="dot"/><rect x="52.8" y="12" width="22.3" height="160" class="hit"><title>09/01: 240%</title></rect><rect x="75.2" y="12" width="22.3" height="160" class="hit"><title>09/02: 278%</title></rect><rect x="97.5" y="12" width="22.3" height="160" class="hit"><title>09/03: 363%</title></rect><rect x="119.9" y="12" width="22.3" height="160" class="hit"><title>09/04: 193%</title></rect><rect x="142.2" y="12" width="22.3" height="160" class="hit"><title>09/05: 311%</title></rect><rect x="164.6" y="12" width="22.3" height="160" class="hit"><title>09/06: 397%</title></rect><rect x="186.9" y="12" width="22.3" height="160" class="hit"><title>09/07: 178%</title></rect><rect x="209.2" y="12" width="22.3" height="160" class="hit"><title>09/08: 143%</title></rect><rect x="231.6" y="12" width="22.3" height="160" class="hit"><title>09/09: 211%</title></rect><rect x="253.9" y="12" width="22.3" height="160" class="hit"><title>09/10: 395%</title></rect><rect x="276.3" y="12" width="22.3" height="160" class="hit"><title>09/11: 306%</title></rect><rect x="298.6" y="12" width="22.3" height="160" class="hit"><title>09/12: 407%</title></rect><rect x="321.0" y="12" width="22.3" height="160" class="hit"><title>09/13: 238%</title></rect><rect x="343.3" y="12" width="22.3" height="160" class="hit"><title>09/14: 430%</title></rect><rect x="365.7" y="12" width="22.3" height="160" class="hit"><title>09/15: 482%</title></rect><rect x="388.0" y="12" width="22.3" height="160" class="hit"><title>09/16: 481%</title></rect><rect x="410.3" y="12" width="22.3" height="160" class="hit"><title>09/17: 468%</title></rect><rect x="432.7" y="12" width="22.3" height="160" class="hit"><title>09/18: 407%</title></rect><rect x="455.0" y="12" width="22.3" height="160" class="hit"><title>09/19: 295%</title></rect><rect x="477.4" y="12" width="22.3" height="160" class="hit"><title>09/20: 256%</title></rect><rect x="499.7" y="12" width="22.3" height="160" class="hit"><title>09/21: 210%</title></rect><rect x="522.1" y="12" width="22.3" height="160" class="hit"><title>09/22: 222%</title></rect><rect x="544.4" y="12" width="22.3" height="160" class="hit"><title>09/23: 405%</title></rect><rect x="566.8" y="12" width="22.3" height="160" class="hit"><title>09/24: 317%</title></rect><rect x="589.1" y="12" width="22.3" height="160" class="hit"><title>09/25: 305%</title></rect><rect x="611.4" y="12" width="22.3" height="160" class="hit"><title>09/26: 276%</title></rect><rect x="633.8" y="12" width="22.3" height="160" class="hit"><title>09/27: 173%</title></rect><rect x="656.1" y="12" width="22.3" height="160" class="hit"><title>09/28: 450%</title></rect><rect x="678.5" y="12" width="22.3" height="160" class="hit"><title>09/29: 421%</title></rect><rect x="700.8" y="12" width="22.3" height="160" class="hit"><title>09/30: 288%</title></rect><text x="64.0" y="192" class="tick" text-anchor="middle">09/01</text><text x="131.0" y="192" class="tick" text-anchor="middle">09/04</text><text x="198.1" y="192" class="tick" text-anchor="middle">09/07</text><text x="265.1" y="192" class="tick" text-anchor="middle">09/10</text><text x="332.1" y="192" class="tick" text-anchor="middle">09/13</text><text x="399.2" y="192" class="tick" text-anchor="middle">09/16</text><text x="466.2" y="192" class="tick" text-anchor="middle">09/19</text><text x="533.2" y="192" class="tick" text-anchor="middle">09/22</text><text x="600.3" y="192" class="tick" text-anchor="middle">09/25</text><text x="667.3" y="192" class="tick" text-anchor="middle">09/28</text><text x="712.0" y="192" class="tick" text-anchor="middle">09/30</text><line x1="64" x2="712" y1="172" y2="172" class="axis"/></svg></div>
+  <div class="card"><h3>일별 링크 CTR</h3><svg viewBox="0 0 720 200" class="chart" role="img"><line x1="64" x2="712" y1="172.0" y2="172.0" class="grid"/><text x="56" y="176.0" class="tick" text-anchor="end">0.0%</text><line x1="64" x2="712" y1="132.0" y2="132.0" class="grid"/><text x="56" y="136.0" class="tick" text-anchor="end">0.5%</text><line x1="64" x2="712" y1="92.0" y2="92.0" class="grid"/><text x="56" y="96.0" class="tick" text-anchor="end">1.0%</text><line x1="64" x2="712" y1="52.0" y2="52.0" class="grid"/><text x="56" y="56.0" class="tick" text-anchor="end">1.5%</text><line x1="64" x2="712" y1="12.0" y2="12.0" class="grid"/><text x="56" y="16.0" class="tick" text-anchor="end">2.0%</text><line x1="64" x2="712" y1="108.0" y2="108.0" class="target"/><text x="708" y="102.0" class="tick strong" text-anchor="end">기준 0.8%</text><polyline class="line" points="64.0,76.9 86.3,71.7 108.7,74.5 131.0,75.7 153.4,74.6 175.7,69.3 198.1,73.6 220.4,82.4 242.8,60.5 265.1,59.7 287.4,65.7 309.8,42.4 332.1,61.7 354.5,64.9 376.8,58.8 399.2,53.2 421.5,57.1 443.9,68.6 466.2,67.0 488.6,50.4 510.9,62.6 533.2,67.3 555.6,59.9 577.9,60.2 600.3,60.7 622.6,48.8 645.0,58.3 667.3,69.8 689.7,58.1 712.0,71.8"/><circle cx="712.0" cy="71.8" r="4" class="dot"/><rect x="52.8" y="12" width="22.3" height="160" class="hit"><title>09/01: 1.2%</title></rect><rect x="75.2" y="12" width="22.3" height="160" class="hit"><title>09/02: 1.3%</title></rect><rect x="97.5" y="12" width="22.3" height="160" class="hit"><title>09/03: 1.2%</title></rect><rect x="119.9" y="12" width="22.3" height="160" class="hit"><title>09/04: 1.2%</title></rect><rect x="142.2" y="12" width="22.3" height="160" class="hit"><title>09/05: 1.2%</title></rect><rect x="164.6" y="12" width="22.3" height="160" class="hit"><title>09/06: 1.3%</title></rect><rect x="186.9" y="12" width="22.3" height="160" class="hit"><title>09/07: 1.2%</title></rect><rect x="209.2" y="12" width="22.3" height="160" class="hit"><title>09/08: 1.1%</title></rect><rect x="231.6" y="12" width="22.3" height="160" class="hit"><title>09/09: 1.4%</title></rect><rect x="253.9" y="12" width="22.3" height="160" class="hit"><title>09/10: 1.4%</title></rect><rect x="276.3" y="12" width="22.3" height="160" class="hit"><title>09/11: 1.3%</title></rect><rect x="298.6" y="12" width="22.3" height="160" class="hit"><title>09/12: 1.6%</title></rect><rect x="321.0" y="12" width="22.3" height="160" class="hit"><title>09/13: 1.4%</title></rect><rect x="343.3" y="12" width="22.3" height="160" class="hit"><title>09/14: 1.3%</title></rect><rect x="365.7" y="12" width="22.3" height="160" class="hit"><title>09/15: 1.4%</title></rect><rect x="388.0" y="12" width="22.3" height="160" class="hit"><title>09/16: 1.5%</title></rect><rect x="410.3" y="12" width="22.3" height="160" class="hit"><title>09/17: 1.4%</title></rect><rect x="432.7" y="12" width="22.3" height="160" class="hit"><title>09/18: 1.3%</title></rect><rect x="455.0" y="12" width="22.3" height="160" class="hit"><title>09/19: 1.3%</title></rect><rect x="477.4" y="12" width="22.3" height="160" class="hit"><title>09/20: 1.5%</title></rect><rect x="499.7" y="12" width="22.3" height="160" class="hit"><title>09/21: 1.4%</title></rect><rect x="522.1" y="12" width="22.3" height="160" class="hit"><title>09/22: 1.3%</title></rect><rect x="544.4" y="12" width="22.3" height="160" class="hit"><title>09/23: 1.4%</title></rect><rect x="566.8" y="12" width="22.3" height="160" class="hit"><title>09/24: 1.4%</title></rect><rect x="589.1" y="12" width="22.3" height="160" class="hit"><title>09/25: 1.4%</title></rect><rect x="611.4" y="12" width="22.3" height="160" class="hit"><title>09/26: 1.5%</title></rect><rect x="633.8" y="12" width="22.3" height="160" class="hit"><title>09/27: 1.4%</title></rect><rect x="656.1" y="12" width="22.3" height="160" class="hit"><title>09/28: 1.3%</title></rect><rect x="678.5" y="12" width="22.3" height="160" class="hit"><title>09/29: 1.4%</title></rect><rect x="700.8" y="12" width="22.3" height="160" class="hit"><title>09/30: 1.3%</title></rect><text x="64.0" y="192" class="tick" text-anchor="middle">09/01</text><text x="131.0" y="192" class="tick" text-anchor="middle">09/04</text><text x="198.1" y="192" class="tick" text-anchor="middle">09/07</text><text x="265.1" y="192" class="tick" text-anchor="middle">09/10</text><text x="332.1" y="192" class="tick" text-anchor="middle">09/13</text><text x="399.2" y="192" class="tick" text-anchor="middle">09/16</text><text x="466.2" y="192" class="tick" text-anchor="middle">09/19</text><text x="533.2" y="192" class="tick" text-anchor="middle">09/22</text><text x="600.3" y="192" class="tick" text-anchor="middle">09/25</text><text x="667.3" y="192" class="tick" text-anchor="middle">09/28</text><text x="712.0" y="192" class="tick" text-anchor="middle">09/30</text><line x1="64" x2="712" y1="172" y2="172" class="axis"/></svg></div>
+</div>
+
+<h2>핵심 분석</h2>
+<div class="card">
+<ul class="insights">
+
+
+  <li><span><span class="badge b-good">성과 · 양호</span></span><span>월 광고비 5,909,174원 집행으로 전환 343건, 매출 18,904,870원. ROAS 320%(목표 300%), CPA 17,228원(목표 18,000원) — 두 목표 모두 달성.</span></li>
+
+  <li><span><span class="badge b-good">성과 · 양호</span></span><span>전월 대비 CPA 20,716원→17,228원(-17%), ROAS 250%→320%(+28%), CTR 1.29%→1.35%(+4%), CPM 8,301원→8,753원(+5%).</span></li>
+
+  <li><span><span class="badge b-info">예산 · 참고</span></span><span>&#39;봄날_트래픽_브랜딩&#39;은 인지/트래픽 목적으로 분류해 CPA·ROAS 대신 CPC 342원, CTR 1.83%로 평가했습니다. 전환 기여(직접 ROAS 143%)가 낮다면 리타겟팅 모수 확보 목적인지 확인하고 예산 비중을 재검토하세요.</span></li>
+
+  <li><span><span class="badge b-good">소재 · 양호</span></span><span>최고 효율 소재는 &#39;릴스_언박싱&#39; (ROAS 743%, CPA 7,889원, CTR 1.93%) — 전체 전환의 27%를 차지합니다.</span></li>
+
+  <li><span><span class="badge b-critical">소재 · 위험</span></span><span>목표 ROAS의 절반에 못 미치는 소재: 브랜드스토리_영상(광고비 594,459원, ROAS 13%), 이미지_베스트3종(광고비 548,842원, ROAS 93%) — 합계 1,143,301원, 전체 광고비의 19%.</span></li>
+
+  <li><span><span class="badge b-info">소재 · 참고</span></span><span>형식별 효율: 릴스(ROAS 743%, CTR 1.93%) &gt; 카드뉴스(ROAS 409%, CTR 1.89%) &gt; 캐러셀(ROAS 374%, CTR 1.16%) &gt; 이미지(ROAS 247%, CTR 0.86%) &gt; 영상(ROAS 224%, CTR 1.39%).</span></li>
+
+  <li><span><span class="badge b-good">타겟 · 양호</span></span><span>효율 상위: 25-34 여성(지출 26% → 전환 37%, ROAS 443%), 35-44 여성(지출 25% → 전환 33%, ROAS 420%).</span></li>
+
+  <li><span><span class="badge b-warning">타겟 · 주의</span></span><span>효율 하위: 55-64 여성(지출 5% → 전환 2%, ROAS 157%), 25-34 남성(지출 6% → 전환 3%, ROAS 183%).</span></li>
+
+  <li><span><span class="badge b-good">지면 · 양호</span></span><span>효율 상위: 인스타그램 릴스(지출 22% → 전환 29%, ROAS 422%), 인스타그램 피드(지출 30% → 전환 35%, ROAS 374%).</span></li>
+
+  <li><span><span class="badge b-warning">지면 · 주의</span></span><span>효율 하위: 오디언스 네트워크 네이티브·배너(지출 5% → 전환 1%, ROAS 87%), 페이스북 릴스(지출 6% → 전환 4%, ROAS 217%).</span></li>
+
+</ul>
+</div>
+
+<h2>캠페인 성과와 다음 달 예산</h2>
+<div class="card tbl">
+<table>
+  <thead><tr><th>캠페인</th><th class="n">광고비</th><th class="n">비중</th><th class="n">전환</th><th class="n">CPA</th><th class="n">ROAS</th><th class="n">전월 ROAS</th><th class="n">CTR</th><th class="n">다음 달 제안</th><th class="n">증감</th></tr></thead>
+  <tbody>
+  
+  
+  <tr>
+    <td>봄날_전환_신규고객</td>
+    <td class="n">3,549,365원</td><td class="n">60%</td>
+    <td class="n">243</td><td class="n">14,606원</td><td class="n">389%</td>
+    <td class="n muted">275%</td><td class="n">1.18%</td>
+    <td class="n">3,820,000원</td>
+    <td class="n chg-good">+8%</td>
+  </tr>
+  
+  
+  <tr>
+    <td>봄날_전환_리타겟팅</td>
+    <td class="n">1,402,202원</td><td class="n">24%</td>
+    <td class="n">73</td><td class="n">19,208원</td><td class="n">267%</td>
+    <td class="n muted">278%</td><td class="n">1.34%</td>
+    <td class="n">1,250,000원</td>
+    <td class="n chg-bad">-11%</td>
+  </tr>
+  
+  
+  <tr>
+    <td>봄날_트래픽_브랜딩 <span class="muted">(인지)</span></td>
+    <td class="n">957,607원</td><td class="n">16%</td>
+    <td class="n">27</td><td class="n">35,467원</td><td class="n">143%</td>
+    <td class="n muted">176%</td><td class="n">1.83%</td>
+    <td class="n">930,000원</td>
+    <td class="n ">-3%</td>
+  </tr>
+  
+  </tbody>
+</table>
+<p class="muted" style="margin:8px 0 0;font-size:12.5px">다음 달 예산은 캠페인 효율(ROAS, 없으면 CPA) 지수에 비례해 ±30% 범위로 조정하고, 인지/트래픽 캠페인은 유지했습니다.</p>
+</div>
+
+<h2>소재 성과</h2>
+<div class="two">
+  <div class="card tbl"><h3>효율 상위 5</h3>
+  <table><thead><tr><th>소재</th><th>형식</th><th class="n">광고비</th><th class="n">ROAS</th><th class="n">CPA</th><th class="n">CTR</th></tr></thead><tbody>
+  <tr><td>릴스_언박싱</td><td>릴스</td><td class="n">717,856원</td><td class="n">743%</td><td class="n">7,889원</td><td class="n">1.93%</td></tr><tr><td>할인쿠폰_이미지</td><td>이미지</td><td class="n">451,274원</td><td class="n">489%</td><td class="n">10,495원</td><td class="n">1.70%</td></tr><tr><td>영상_후기모음_v1</td><td>영상</td><td class="n">882,989원</td><td class="n">411%</td><td class="n">13,179원</td><td class="n">1.21%</td></tr><tr><td>후기_카드뉴스</td><td>카드뉴스</td><td class="n">356,469원</td><td class="n">409%</td><td class="n">12,731원</td><td class="n">1.89%</td></tr><tr><td>캐러셀_신상품</td><td>캐러셀</td><td class="n">661,797원</td><td class="n">374%</td><td class="n">15,391원</td><td class="n">1.16%</td></tr>
+  </tbody></table></div>
+  <div class="card tbl"><h3>효율 하위 5</h3>
+  <table><thead><tr><th>소재</th><th>형식</th><th class="n">광고비</th><th class="n">ROAS</th><th class="n">CPA</th><th class="n">CTR</th></tr></thead><tbody>
+  <tr><td>브랜드스토리_영상</td><td>영상</td><td class="n">594,459원</td><td class="n">13%</td><td class="n">297,230원</td><td class="n">0.84%</td></tr><tr><td>이미지_베스트3종</td><td>이미지</td><td class="n">548,842원</td><td class="n">93%</td><td class="n">54,884원</td><td class="n">0.44%</td></tr><tr><td>영상_사용법</td><td>영상</td><td class="n">737,881원</td><td class="n">250%</td><td class="n">23,059원</td><td class="n">0.95%</td></tr><tr><td>캐러셀_신상품</td><td>캐러셀</td><td class="n">661,797원</td><td class="n">374%</td><td class="n">15,391원</td><td class="n">1.16%</td></tr><tr><td>후기_카드뉴스</td><td>카드뉴스</td><td class="n">356,469원</td><td class="n">409%</td><td class="n">12,731원</td><td class="n">1.89%</td></tr>
+  </tbody></table></div>
+</div>
+<div class="card tbl" style="margin-top:12px"><h3>전체 소재 · 월 전반 → 후반 CTR 변화</h3>
+<table><thead><tr><th>소재</th><th>광고세트</th><th>상태</th><th class="n">광고비</th><th class="n">CTR 전반</th><th class="n">CTR 후반</th><th class="n">변화</th><th class="n">월 빈도</th><th>판정</th></tr></thead><tbody>
+
+<tr><td>영상_후기모음_v1</td><td class="muted">관심사_25-44여성</td><td>집행</td>
+<td class="n">882,989원</td><td class="n">1.22%</td><td class="n">1.20%</td>
+<td class="n">-1%</td><td class="n">1.2</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>시즌_룩북_영상</td><td class="muted">광범위_전국</td><td>집행</td>
+<td class="n">746,193원</td><td class="n">2.09%</td><td class="n">2.08%</td>
+<td class="n">-1%</td><td class="n">1.2</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>영상_사용법</td><td class="muted">유사타겟_구매자1%</td><td>집행</td>
+<td class="n">737,881원</td><td class="n">0.99%</td><td class="n">0.92%</td>
+<td class="n">-7%</td><td class="n">1.2</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>릴스_언박싱</td><td class="muted">관심사_25-44여성</td><td>집행</td>
+<td class="n">717,856원</td><td class="n">2.00%</td><td class="n">1.91%</td>
+<td class="n">-5%</td><td class="n">1.2</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>캐러셀_신상품</td><td class="muted">유사타겟_구매자1%</td><td>집행</td>
+<td class="n">661,797원</td><td class="n">1.14%</td><td class="n">1.18%</td>
+<td class="n">+3%</td><td class="n">1.2</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>브랜드스토리_영상</td><td class="muted">방문자_30일</td><td>집행</td>
+<td class="n">594,459원</td><td class="n">0.85%</td><td class="n">0.84%</td>
+<td class="n">-1%</td><td class="n">1.7</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>이미지_베스트3종</td><td class="muted">관심사_25-44여성</td><td>집행</td>
+<td class="n">548,842원</td><td class="n">0.45%</td><td class="n">0.42%</td>
+<td class="n">-6%</td><td class="n">1.2</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>할인쿠폰_이미지</td><td class="muted">장바구니_7일</td><td>집행</td>
+<td class="n">451,274원</td><td class="n">1.82%</td><td class="n">1.59%</td>
+<td class="n">-13%</td><td class="n">14.7</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>후기_카드뉴스</td><td class="muted">장바구니_7일</td><td>집행</td>
+<td class="n">356,469원</td><td class="n">1.91%</td><td class="n">1.87%</td>
+<td class="n">-2%</td><td class="n">12.3</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+<tr><td>이벤트_배너</td><td class="muted">광범위_전국</td><td>중지</td>
+<td class="n">211,414원</td><td class="n">0.94%</td><td class="n">-</td>
+<td class="n">-</td><td class="n">1.2</td>
+<td><span class="badge b-good">정상</span></td></tr>
+
+</tbody></table></div>
+
+<div class="card tbl" style="margin-top:12px"><h3>형식별 성과</h3>
+<table><thead><tr><th>형식</th><th class="n">광고비 비중</th><th class="n">전환 비중</th><th class="n">CTR</th><th class="n">CPA</th><th class="n">ROAS</th></tr></thead><tbody>
+
+<tr><td>영상</td>
+<td class="n"><span class="meter muted"><span style="width:100.0%"></span></span>50%</td>
+<td class="n"><span class="meter"><span style="width:71.0%"></span></span>36%</td>
+<td class="n">1.39%</td><td class="n">24,275원</td><td class="n">224%</td></tr><tr><td>이미지</td>
+<td class="n"><span class="meter muted"><span style="width:40.9%"></span></span>21%</td>
+<td class="n"><span class="meter"><span style="width:34.3%"></span></span>17%</td>
+<td class="n">0.86%</td><td class="n">20,534원</td><td class="n">247%</td></tr><tr><td>릴스</td>
+<td class="n"><span class="meter muted"><span style="width:24.2%"></span></span>12%</td>
+<td class="n"><span class="meter"><span style="width:52.9%"></span></span>27%</td>
+<td class="n">1.93%</td><td class="n">7,889원</td><td class="n">743%</td></tr><tr><td>캐러셀</td>
+<td class="n"><span class="meter muted"><span style="width:22.3%"></span></span>11%</td>
+<td class="n"><span class="meter"><span style="width:25.0%"></span></span>13%</td>
+<td class="n">1.16%</td><td class="n">15,391원</td><td class="n">374%</td></tr><tr><td>카드뉴스</td>
+<td class="n"><span class="meter muted"><span style="width:12.0%"></span></span>6%</td>
+<td class="n"><span class="meter"><span style="width:16.3%"></span></span>8%</td>
+<td class="n">1.89%</td><td class="n">12,731원</td><td class="n">409%</td></tr>
+</tbody></table></div>
+
+<h2>타겟 · 지면</h2>
+<div class="two">
+<div class="card tbl"><h3>연령 · 성별</h3>
+<table><thead><tr><th>구분</th><th class="n">광고비 비중</th><th class="n">전환 비중</th><th class="n">ROAS</th></tr></thead><tbody>
+
+<tr><td>18-24 여성</td>
+<td class="n"><span class="meter muted"><span style="width:21.4%"></span></span>8%</td>
+<td class="n"><span class="meter"><span style="width:13.6%"></span></span>5%</td>
+<td class="n">203%</td></tr><tr><td>18-24 남성</td>
+<td class="n"><span class="meter muted"><span style="width:8.0%"></span></span>3%</td>
+<td class="n"><span class="meter"><span style="width:2.5%"></span></span>1%</td>
+<td class="n">99%</td></tr><tr><td>25-34 여성</td>
+<td class="n"><span class="meter muted"><span style="width:72.3%"></span></span>26%</td>
+<td class="n"><span class="meter"><span style="width:100.0%"></span></span>37%</td>
+<td class="n">443%</td></tr><tr><td>25-34 남성</td>
+<td class="n"><span class="meter muted"><span style="width:16.1%"></span></span>6%</td>
+<td class="n"><span class="meter"><span style="width:9.2%"></span></span>3%</td>
+<td class="n">183%</td></tr><tr><td>25-34 미상</td>
+<td class="n"><span class="meter muted"><span style="width:2.7%"></span></span>1%</td>
+<td class="n"><span class="meter"><span style="width:1.9%"></span></span>1%</td>
+<td class="n">222%</td></tr><tr><td>35-44 여성</td>
+<td class="n"><span class="meter muted"><span style="width:69.6%"></span></span>25%</td>
+<td class="n"><span class="meter"><span style="width:91.4%"></span></span>33%</td>
+<td class="n">420%</td></tr><tr><td>35-44 남성</td>
+<td class="n"><span class="meter muted"><span style="width:13.4%"></span></span>5%</td>
+<td class="n"><span class="meter"><span style="width:8.2%"></span></span>3%</td>
+<td class="n">197%</td></tr><tr><td>35-44 미상</td>
+<td class="n"><span class="meter muted"><span style="width:2.7%"></span></span>1%</td>
+<td class="n"><span class="meter"><span style="width:1.9%"></span></span>1%</td>
+<td class="n">222%</td></tr><tr><td>45-54 여성</td>
+<td class="n"><span class="meter muted"><span style="width:37.5%"></span></span>14%</td>
+<td class="n"><span class="meter"><span style="width:32.6%"></span></span>12%</td>
+<td class="n">278%</td></tr><tr><td>45-54 남성</td>
+<td class="n"><span class="meter muted"><span style="width:8.0%"></span></span>3%</td>
+<td class="n"><span class="meter"><span style="width:3.2%"></span></span>1%</td>
+<td class="n">129%</td></tr><tr><td>55-64 여성</td>
+<td class="n"><span class="meter muted"><span style="width:13.4%"></span></span>5%</td>
+<td class="n"><span class="meter"><span style="width:6.6%"></span></span>2%</td>
+<td class="n">157%</td></tr><tr><td>55-64 남성</td>
+<td class="n"><span class="meter muted"><span style="width:2.7%"></span></span>1%</td>
+<td class="n"><span class="meter"><span style="width:0.8%"></span></span>0%</td>
+<td class="n">92%</td></tr><tr><td>65+ 여성</td>
+<td class="n"><span class="meter muted"><span style="width:4.0%"></span></span>1%</td>
+<td class="n"><span class="meter"><span style="width:1.1%"></span></span>0%</td>
+<td class="n">86%</td></tr><tr><td>65+ 남성</td>
+<td class="n"><span class="meter muted"><span style="width:1.3%"></span></span>0%</td>
+<td class="n"><span class="meter"><span style="width:0.2%"></span></span>0%</td>
+<td class="n">46%</td></tr>
+</tbody></table></div>
+<div class="card tbl"><h3>노출 지면</h3>
+<table><thead><tr><th>지면</th><th class="n">광고비 비중</th><th class="n">전환 비중</th><th class="n">CTR</th><th class="n">ROAS</th></tr></thead><tbody>
+
+<tr><td>인스타그램 피드</td>
+<td class="n"><span class="meter muted"><span style="width:85.6%"></span></span>30%</td>
+<td class="n"><span class="meter"><span style="width:100.0%"></span></span>35%</td>
+<td class="n">1.34%</td><td class="n">374%</td></tr><tr><td>인스타그램 릴스</td>
+<td class="n"><span class="meter muted"><span style="width:62.8%"></span></span>22%</td>
+<td class="n"><span class="meter"><span style="width:82.9%"></span></span>29%</td>
+<td class="n">1.66%</td><td class="n">422%</td></tr><tr><td>페이스북 피드</td>
+<td class="n"><span class="meter muted"><span style="width:51.4%"></span></span>18%</td>
+<td class="n"><span class="meter"><span style="width:47.2%"></span></span>17%</td>
+<td class="n">1.21%</td><td class="n">294%</td></tr><tr><td>인스타그램 스토리</td>
+<td class="n"><span class="meter muted"><span style="width:45.7%"></span></span>16%</td>
+<td class="n"><span class="meter"><span style="width:37.7%"></span></span>13%</td>
+<td class="n">1.15%</td><td class="n">265%</td></tr><tr><td>페이스북 릴스</td>
+<td class="n"><span class="meter muted"><span style="width:17.1%"></span></span>6%</td>
+<td class="n"><span class="meter"><span style="width:11.6%"></span></span>4%</td>
+<td class="n">1.27%</td><td class="n">217%</td></tr><tr><td>오디언스 네트워크 네이티브·배너</td>
+<td class="n"><span class="meter muted"><span style="width:14.3%"></span></span>5%</td>
+<td class="n"><span class="meter"><span style="width:3.9%"></span></span>1%</td>
+<td class="n">1.79%</td><td class="n">87%</td></tr><tr><td>메신저 받은편지함</td>
+<td class="n"><span class="meter muted"><span style="width:8.6%"></span></span>3%</td>
+<td class="n"><span class="meter"><span style="width:2.1%"></span></span>1%</td>
+<td class="n">0.64%</td><td class="n">77%</td></tr>
+</tbody></table>
+<p class="muted" style="margin:8px 0 0;font-size:12.5px">회색 막대 = 광고비 비중, 파란 막대 = 전환 비중. 파란 막대가 더 길면 지출 대비 효율이 높은 구간입니다.</p>
+</div>
+</div>
+
+<h2>다음 달 방향</h2>
+<div class="targets">
+  <div class="card tile"><div class="label">예산</div><div class="value">6,000,000원</div></div>
+  <div class="card tile"><div class="label">목표 CPA</div><div class="value">16,367원</div></div>
+  <div class="card tile"><div class="label">목표 ROAS</div><div class="value">336%</div></div>
+  <div class="card tile"><div class="label">목표 전환</div><div class="value">367건</div></div>
+  <div class="card tile"><div class="label">목표 CTR</div><div class="value">1.35%</div></div>
+</div>
+<div class="card tbl plan" style="margin-top:12px">
+<table><thead><tr><th>우선순위</th><th>영역</th><th>실행 항목</th><th>근거</th></tr></thead><tbody>
+
+<tr><td><span class="badge b-critical">높음</span></td><td>소재</td><td>저효율 소재 OFF 후 예산 회수: 브랜드스토리_영상, 이미지_베스트3종</td><td class="muted">목표 ROAS의 50% 미만 — 월 1,143,301원 절감 가능.</td></tr><tr><td><span class="badge b-critical">높음</span></td><td>소재</td><td>&#39;릴스_언박싱&#39; 콘셉트로 변형 소재 3종 제작 (훅·썸네일·카피 각각 다르게)</td><td class="muted">검증된 메시지를 유지하면서 피로를 분산합니다.</td></tr><tr><td><span class="badge b-critical">높음</span></td><td>예산</td><td>캠페인 예산 재배분: 봄날_전환_신규고객 +8%, 봄날_전환_리타겟팅 -11% (주 단위로 20%씩 단계 조정)</td><td class="muted">효율 지수(ROAS/CPA 기준)에 비례해 배분했습니다.</td></tr><tr><td><span class="badge b-warning">중간</span></td><td>소재</td><td>신규 소재의 절반 이상을 &#39;릴스&#39; 형식으로 제작</td><td class="muted">이번 달 형식별 효율 1위 (ROAS 743%).</td></tr><tr><td><span class="badge b-warning">중간</span></td><td>타겟</td><td>제외/축소 테스트: 55-64 여성</td><td class="muted">지출 5%를 쓰고 효율은 평균의 절반 미만.</td></tr><tr><td><span class="badge b-warning">중간</span></td><td>지면</td><td>지면 제외 테스트: 오디언스 네트워크 네이티브·배너</td><td class="muted">지출 5%를 쓰고 효율은 평균의 절반 미만.</td></tr><tr><td><span class="badge b-warning">중간</span></td><td>구조</td><td>활성 소재 3개 미만 광고세트 보강: 유사타겟_구매자1%, 광범위_전국, 장바구니_7일, 방문자_30일</td><td class="muted">광고세트당 3~5개 소재가 있어야 메타가 효율 소재를 찾고 피로에도 대응할 수 있습니다.</td></tr><tr><td><span class="badge b-info">낮음</span></td><td>측정</td><td>픽셀·전환 API(CAPI) 이벤트 매칭 품질과 구매 이벤트 중복 여부 월 1회 점검</td><td class="muted">추적 누락은 성과 저하로 오인되어 잘못된 의사결정을 만듭니다.</td></tr>
+</tbody></table></div>
+
+<footer>생성 2026-10-08 03:02 · 전환 기준: 7일 클릭/1일 조회 기여 · 데이터 출처: Meta Marketing API</footer>
+</main>
+</body>
+</html>
